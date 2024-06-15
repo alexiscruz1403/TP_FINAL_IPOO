@@ -1,4 +1,5 @@
 <?php
+include_once 'BaseDatos.php';
 
 class Persona{
     //Atributos
