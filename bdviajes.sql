@@ -30,6 +30,7 @@ CREATE TABLE viaje (
 	idEmpresa bigint,
     numeroEmpleado bigint,
     importe float,
+    costosAbonados float,
     PRIMARY KEY (idViaje),
     FOREIGN KEY (idEmpresa) REFERENCES empresa (idEmpresa),
 	FOREIGN KEY (numeroEmpleado) REFERENCES responsable (numeroEmpleado)
@@ -44,7 +45,7 @@ CREATE TABLE pasajero (
     nroTicket int,
     nroDocumento varchar(15),
     PRIMARY KEY (idPasajero),
-	FOREIGN KEY (idViaje) REFERENCES viaje (idViaje),
+	FOREIGN KEY (idViaje) REFERENCES viaje (idViaje) ON UPDATE CASCADE ON DELETE RESTRICT,
     FOREIGN KEY (nroDocumento) REFERENCES Persona(nroDocumento) ON UPDATE CASCADE ON DELETE CASCADE	
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
  
