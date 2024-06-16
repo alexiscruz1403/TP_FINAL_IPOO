@@ -23,8 +23,7 @@ class Viaje{
         $this->numeroEmpleado="";
         $this->mensaje="";
     }
-    public function cargar($unIdViaje,$unDestino,$unaCantMaxPasajeros,$unImporte,$unIdEmpresa,$unNumeroEmpleado){
-        $this->idViaje=$unIdViaje;
+    public function cargar($unDestino,$unaCantMaxPasajeros,$unImporte,$unIdEmpresa,$unNumeroEmpleado){
         $this->destino=$unDestino;
         $this->cantMaxPasajeros=$unaCantMaxPasajeros;
         $this->importe=$unImporte;
@@ -83,12 +82,15 @@ class Viaje{
         return $this->numeroEmpleado;
     }
     public function getColeccionPasajeros(){
+        $this->cargarColeccion();
         return $this->colPasajeros;
     }
     public function getEmpresa(){
+        $this->cargarEmpresa();
         return $this->objEmpresa;
     }
     public function getResponsable(){
+        $this->cargarResponsable();
         return $this->objResponsable;
     }
     public function getMensaje(){
@@ -100,7 +102,8 @@ class Viaje{
         "CantMaxPasajeros: ".$this->getCantMaxPasajeros()."\n".
         "Importe: ".$this->getImporte()."\n".
         "IdEmpresa: ".$this->getIdEmpresa()."\n".
-        "NumeroEmpleado: ".$this->getNumeroEmpleado()."\n";
+        "NumeroEmpleado: ".$this->getNumeroEmpleado()."\n".
+        "Cantidad Pasajeros: ".count($this->getColeccionPasajeros())."\n";
     }
 
     //Modificadores
@@ -156,9 +159,6 @@ class Viaje{
                     $this->setImporte($registro['importe']);
                     $this->setIdEmpresa($registro['idEmpresa']);
                     $this->setNumeroEmpleado($registro['numeroEmpleado']);
-                    $this->cargarColeccion();
-                    $this->cargarEmpresa();
-                    $this->cargarResponsable();
                     $encontrado=true;
                 }
             }else{
@@ -256,14 +256,8 @@ class Viaje{
             }
             if($base->ejecutar($consulta)){
                 while($registro=$base->registro()){
-                    $idViaje=$registro['idViaje'];
-                    $destino=$registro['destino'];
-                    $cantMaxPasajeros=$registro['cantMaxPasajeros'];
-                    $importe=$registro['importe'];
-                    $idEmpresa=$registro['idEmpresa'];
-                    $numeroEmpleado=$registro['numeroEmpleado'];
                     $unViaje=new Viaje();
-                    $unViaje->cargar($idViaje,$destino,$cantMaxPasajeros,$importe,$idEmpresa,$numeroEmpleado);
+                    $unViaje->buscar($registro['idViaje']);
                     array_push($colPasajeros,$unViaje);
                 }
             }else{

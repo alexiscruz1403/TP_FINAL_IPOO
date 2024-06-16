@@ -176,12 +176,8 @@ class Persona{
             }
             if($base->ejecutar($consulta)){
                 while($registro=$base->registro()){
-                    $nroDocumento=$registro['nroDocumento'];
-                    $nombre=$registro['nombre'];
-                    $apellido=$registro['apellido'];
-                    $telefono=$registro['telefono'];
                     $unPasajero=new Persona();
-                    $unPasajero->cargar($nroDocumento,$nombre,$apellido,$telefono);
+                    $unPasajero->buscar($registro['idPasajero']);
                     array_push($colPasajeros,$unPasajero);
                 }
             }else{

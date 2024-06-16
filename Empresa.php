@@ -165,12 +165,8 @@ class Empresa{
             }
             if($base->ejecutar($consulta)){
                 while($registro=$base->registro()){
-                    $idEmpresa=$registro['idEmpresa'];
-                    $nombre=$registro['nombre'];
-                    $direccion=$registro['direccion'];
                     $unaEmpresa=new Empresa();
-                    $unaEmpresa->cargar($nombre,$direccion);
-                    $unaEmpresa->setIdEmpresa($idEmpresa);
+                    $unaEmpresa->buscar($registro['$idEmpresa']);
                     array_push($colPasajeros,$unaEmpresa);
                 }
             }else{

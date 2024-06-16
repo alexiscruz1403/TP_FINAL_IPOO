@@ -4,14 +4,12 @@ class Responsable extends Persona{
     //Atributos
     private $numeroEmpleado;
     private $numeroLicencia;
-    private $mensaje;
 
     //Constructor
     public function __construct(){
         parent::__construct();
         $this->numeroEmpleado="";
         $this->numeroLicencia="";
-        $this->mensaje="";
     }
     public function cargar($unNroDocumento,$unNombre,$unApellido,$unTelefono,$unNumeroLicencia=""){
         parent::cargar($unNroDocumento,$unNombre,$unApellido,$unTelefono);
@@ -25,12 +23,11 @@ class Responsable extends Persona{
     public function getNumeroLicencia(){
         return $this->numeroLicencia;
     }
-    public function getMensaje(){
-        return $this->mensaje;
-    }
     public function __toString(){
-        return "NumeroEmpleado: ".$this->getNumeroEmpleado()."\n".
+        $cadena=parent::__toString();
+        $cadena.="NumeroEmpleado: ".$this->getNumeroEmpleado()."\n".
         "NumeroLicencia: ".$this->getNumeroLicencia()."\n";
+        return $cadena;
     }
 
     //Modificadores
@@ -39,9 +36,6 @@ class Responsable extends Persona{
     }
     public function setNumeroLicencia($unNumeroLicencia){
         $this->numeroLicencia=$unNumeroLicencia;
-    }
-    public function setMensaje($unMensaje){
-        $this->mensaje=$unMensaje;
     }
 
     //Propios
@@ -58,14 +52,12 @@ class Responsable extends Persona{
             $consulta="SELECT * FROM responsable WHERE numeroEmpleado=".$numeroEmpleado;
             if($base->ejecutar($consulta)){
                 while($registro=$base->registro()){
-                    $this->setNroDocumento($registro['nroDocumento']);
-                    $this->setNumeroEmpleado($registro['numeroEmpleado']);
-                    $this->setNumeroLicencia($registro['numeroLicencia']);
-                }
-                if(parent::buscar($this->getNroDocumento())){
-                    $encontrado=true;
-                }else{
-                    $this->setMensaje($base->getError());
+                    if(parent::buscar($registro['nroDocumento'])){
+                        $this->setNumeroEmpleado($registro['numeroEmpleado']);
+                        $this->setNumeroLicencia($registro['numeroLicencia']);
+                    }else{
+                        $this->setMensaje($base->getError());
+                    }
                 }
             }else{
                 $this->setMensaje($base->getError());
@@ -113,7 +105,11 @@ class Responsable extends Persona{
         if($base->iniciar()){
             $consulta="DELETE FROM responsable WHERE numeroEmpleado=".$this->getNumeroEmpleado();
             if($base->ejecutar($consulta)){
-                $eliminado=true;
+                if(parent::eliminar()){
+                    $eliminado=true; 
+                }else{
+                    $this->setMensaje($base->getError());
+                }
             }else{
                 $this->setMensaje($base->getError());
             }
@@ -133,7 +129,7 @@ class Responsable extends Persona{
         $base=new BaseDatos();
         if($base->iniciar()){
             $consulta="UPDATE responsable SET numeroLicencia=".$this->getNumeroLicencia().
-            ",nroDocumento='".$this->getNombre().
+            ",nroDocumento='".$this->getNroDocumento().
             "' WHERE numeroEmpleado=".$this->getNumeroEmpleado();
             if($base->ejecutar($consulta)){
                 $modificado=true;
@@ -163,11 +159,8 @@ class Responsable extends Persona{
             }
             if($base->ejecutar($consulta)){
                 while($registro=$base->registro()){
-                    $numeroEmpleado=$registro['numeroEmpleado'];
-                    $numeroLicencia=$registro['numeroLicencia'];
-                    $nroDocumento=$registro['nroDocumento'];
                     $unResponsable=new Responsable;
-                    $unResponsable->setNumeroEmpleado($numeroEmpleado);
+                    $unResponsable->buscar($registro['numeroEmpleado']);
                     array_push($colPasajeros,$unResponsable);
                 }
             }else{
