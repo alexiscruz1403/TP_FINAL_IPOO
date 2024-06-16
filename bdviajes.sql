@@ -40,6 +40,8 @@ CREATE TABLE viaje (
 CREATE TABLE pasajero (
     idPasajero bigint AUTO_INCREMENT,
 	idViaje bigint,
+    nroAsiento int,
+    nroTicket int,
     nroDocumento varchar(15),
     PRIMARY KEY (idPasajero),
 	FOREIGN KEY (idViaje) REFERENCES viaje (idViaje),
