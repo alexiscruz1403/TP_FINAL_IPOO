@@ -19,6 +19,7 @@ class BaseDatos{
         $this->QUERY="";
         $this->RESULT=0;
         $this->ERROR="";
+        
     }
 
     //Observadores
@@ -72,11 +73,12 @@ class BaseDatos{
             if (mysqli_select_db($conexion,$this->getBaseDatos())){
             $this->setConexion($conexion);
             $rta=true;
+            // echo "Conexión establecida correctamente a la base de datos." . "\n";
             }else{
-                $this->setError(mysqli_errno($conexion));
+                $this->ERROR = mysqli_errno($conexion) . ": " .mysqli_error($conexion);
             }
         }else{
-            $this->setError(mysqli_errno($conexion));
+            $this->ERROR = mysqli_connect_errno() . ": " . mysqli_connect_error();
         }
         return $rta;
     }
