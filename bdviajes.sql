@@ -1,5 +1,7 @@
 CREATE DATABASE bd_viajes; 
 
+USE bd_viajes;
+
 CREATE TABLE empresa(
     idEmpresa bigint AUTO_INCREMENT,
     nombre varchar(150),
