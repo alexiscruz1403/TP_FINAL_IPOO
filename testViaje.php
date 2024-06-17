@@ -272,7 +272,7 @@ class TestViaje{
     {
         echo "Ingrese el ID del Viaje a eliminar: ";
         $idViaje=trim(fgets(STDIN));
-        $unViaje=new Empresa();
+        $unViaje=new Viaje();
         echo "\n*********** <<VIAJE A ELIMINAR>> ***********" . "\n";
         if($unViaje->buscar($idViaje)){
             echo "Viaje encontrado:\n" . $unViaje . "\n";

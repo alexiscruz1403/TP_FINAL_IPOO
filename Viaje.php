@@ -238,6 +238,7 @@ class Viaje{
             ",importe=".$this->getImporte().
             ",idEmpresa=".$this->getIdEmpresa().
             ",numeroEmpleado=".$this->getNumeroEmpleado().
+            ",costosAbonados=".$this->getCostosAbonados().
             " WHERE idViaje=".$this->getIdViaje();
             if($base->ejecutar($consulta)){
                 $modificado=true;
