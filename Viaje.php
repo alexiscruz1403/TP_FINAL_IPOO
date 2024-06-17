@@ -25,13 +25,13 @@ class Viaje{
         $this->costosAbonados="";
         $this->mensaje="";
     }
-    public function cargar($unDestino,$unaCantMaxPasajeros,$unImporte,$unIdEmpresa,$unNumeroEmpleado,$costosAbonados){
+    public function cargar($unDestino,$unaCantMaxPasajeros,$unImporte,$unIdEmpresa,$unNumeroEmpleado){
         $this->destino=$unDestino;
         $this->cantMaxPasajeros=$unaCantMaxPasajeros;
         $this->importe=$unImporte;
         $this->idEmpresa=$unIdEmpresa;
         $this->numeroEmpleado=$unNumeroEmpleado;
-        $this->costosAbonados=$costosAbonados;
+        $this->costosAbonados=0;
     }
     public function cargarColeccion(){
         $base=new BaseDatos();
@@ -109,7 +109,8 @@ class Viaje{
         "Importe: ".$this->getImporte()."\n".
         "IdEmpresa: ".$this->getIdEmpresa()."\n".
         "NumeroEmpleado: ".$this->getNumeroEmpleado()."\n".
-        "Cantidad Pasajeros: ".count($this->getColeccionPasajeros())."\n";
+        "Cantidad Pasajeros: ".count($this->getColeccionPasajeros())."\n".
+        "Costos abonados: ".$this->getCostosAbonados()."\n";
     }
 
     //Modificadores
@@ -168,6 +169,7 @@ class Viaje{
                     $this->setImporte($registro['importe']);
                     $this->setIdEmpresa($registro['idEmpresa']);
                     $this->setNumeroEmpleado($registro['numeroEmpleado']);
+                    $this->setCostosAbonados($registro['costosAbonados']);
                     $encontrado=true;
                 }
             }else{
@@ -188,8 +190,8 @@ class Viaje{
         $base=new BaseDatos();
         $agregado=false;
         if($base->iniciar()){
-            $consulta="INSERT INTO viaje(destino,cantMaxPasajeros,importe,idEmpresa,numeroEmpleado) VALUES ('".$this->getDestino().
-            "',".$this->getCantMaxPasajeros().",".$this->getImporte().",".$this->getIdEmpresa().",".$this->getNumeroEmpleado().")";
+            $consulta="INSERT INTO viaje(destino,cantMaxPasajeros,importe,idEmpresa,numeroEmpleado,costosAbonados) VALUES ('".$this->getDestino().
+            "',".$this->getCantMaxPasajeros().",".$this->getImporte().",".$this->getIdEmpresa().",".$this->getNumeroEmpleado().",".$this->getCostosAbonados().")";
             if($base->ejecutar($consulta)){
                 $agregado=true;
             }else{

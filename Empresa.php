@@ -166,7 +166,7 @@ class Empresa{
             if($base->ejecutar($consulta)){
                 while($registro=$base->registro()){
                     $unaEmpresa=new Empresa();
-                    $unaEmpresa->buscar($registro['$idEmpresa']);
+                    $unaEmpresa->buscar($registro['idEmpresa']);
                     array_push($colPasajeros,$unaEmpresa);
                 }
             }else{

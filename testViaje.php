@@ -9,11 +9,8 @@ include_once 'Empresa.php';
 include_once 'Viaje.php';
 
 
-class TestViaje
-{
-
-
-    public function mostrarMenu()
+class TestViaje{
+    public function mostrarMenuEmpresa()
     {
         do {
             echo "----------<< MENU >>------------\n";
@@ -48,6 +45,7 @@ class TestViaje
                     break;
                 default:
                     echo "Opción no válida, intente nuevamente.\n";
+                    break;
             }
         } while ($opcion != 6);
     }
@@ -61,7 +59,7 @@ class TestViaje
         $direccion = trim(fgets(STDIN));
 
         $empresa = new Empresa();
-        $empresa->cargar(0, $nombre, $direccion);
+        $empresa->cargar($nombre, $direccion);
         if ($empresa->insertar()) {
             echo "Empresa insertada correctamente.\n";
         } else {
@@ -159,10 +157,159 @@ class TestViaje
         echo "<<<<<<<<<<<< FIN DE LISTADO >>>>>>>>>>>>" . "\n";
         echo "\n";
     }
+
+    public function mostrarMenuViaje(){
+        do{
+            echo "----------<< MENU >>------------\n";
+            echo "1. Ingresar un Viaje\n";
+            echo "2. Buscar un Viaje\n";
+            echo "3. Modificar un Viaje\n";
+            echo "4. Eliminar un Viaje\n";
+            echo "5. Listar Viajes\n";
+            echo "6. Salir\n";
+            echo "----------------------\n";
+            echo "Opcion: ";
+            $opcion = trim(fgets(STDIN));
+    
+            switch ($opcion) {
+                case 1:
+                    $this->insertarViaje();
+                    break;
+                case 2:
+                    $this->buscarViaje();
+                    break;
+                case 3:
+                    $this->modificarViaje();
+                    break;
+                case 4:
+                    $this->eliminarViaje();
+                    break;
+                case 5:
+                    $this->listarViajes();
+                    break;
+                case 6:
+                    echo "Saliendo...\n";
+                    break;
+                default:
+                    echo "Opción no válida, intente nuevamente.\n";
+                    break;
+            }
+        } while ($opcion != 6);
+    }
+
+    private function insertarViaje(){
+        echo "\n***********************************" . "\n";
+        echo "Ingrese el destino: ";
+        $destino=trim(fgets(STDIN));
+        echo "Ingrese la cantidad maxima de pasajeros: ";
+        $cantMaxPasajeros=trim(fgets(STDIN));
+        echo "Ingrese el ID de la empresa: ";
+        $idEmpresa=trim(fgets(STDIN));
+        echo "Ingrese el numero de empleado del Responsable a cargo: ";
+        $numEmpleado=trim(fgets(STDIN));
+        echo "Ingrese el costo del viaje: ";
+        $importe=trim(fgets(STDIN));
+        $unViaje=new Viaje();
+        $unViaje->cargar($destino,$cantMaxPasajeros,$importe,$idEmpresa,$numEmpleado);
+        if($unViaje->insertar()){
+            echo "Viaje insertado correctamente.\n";
+        }else{
+            echo "Error al insertar el Viaje: ".$unViaje->getMensaje()."\n";
+        }
+        echo "\n***********************************" . "\n";
+    }
+
+    private function buscarViaje(){
+        echo "Ingrese el ID del Viaje a buscar: ";
+        $idViaje=trim(fgets(STDIN));
+        $unViaje=new Viaje();
+        echo "\n***********************************" . "\n";
+        if($unViaje->buscar($idViaje)){
+            echo $unViaje;
+        }else{
+            echo "Viaje no encontrado."."\n";
+        }
+        echo "\n***********************************" . "\n";
+    }
+
+    private function modificarViaje(){
+        echo "Ingrese el ID del Viaje a modificar: ";
+        $idViaje=trim(fgets(STDIN));
+        $unViaje=new Viaje();
+        echo "\n***********************************" . "\n";
+        if($unViaje->buscar($idViaje)){
+            echo "Viaje encontrado:\n".$unViaje;
+            echo "\n***********************************" . "\n";
+            echo "Ingrese el nuevo destino: ";
+            $destino=trim(fgets(STDIN));
+            echo "Ingrese la nueva cantidad maxima de pasajeros: ";
+            $cantMaxPasajeros=trim(fgets(STDIN));
+            echo "Ingrese el nuevo numero de empleado del Responsable: ";
+            $numEmpleado=trim(fgets(STDIN));
+            echo "Ingrese el nuevo ID de la empresa: ";
+            $idEmpresa=trim(fgets(STDIN));
+            echo "Ingrese el nuevo costo: ";
+            $importe=trim(fgets(STDIN));
+            $unViaje->setDestino($destino);
+            $unViaje->setCantMaxPasajeros($cantMaxPasajeros);
+            $unViaje->setNumeroEmpleado($numEmpleado);
+            $unViaje->setIdEmpresa($idEmpresa);
+            $unViaje->setImporte($importe);
+            if($unViaje->modificar()){
+                echo "Viaje modificado correctamente.\n";
+            }else{
+                echo "Error al modificar el Viaje: ".$unViaje->getMensaje()."\n";
+            }
+        }else{
+            echo "Viaje no encontrado.\n";
+        }
+        echo "\n***********************************" . "\n";
+    }
+
+    private function eliminarViaje()
+    {
+        echo "Ingrese el ID del Viaje a eliminar: ";
+        $idViaje=trim(fgets(STDIN));
+        $unViaje=new Empresa();
+        echo "\n*********** <<VIAJE A ELIMINAR>> ***********" . "\n";
+        if($unViaje->buscar($idViaje)){
+            echo "Viaje encontrado:\n" . $unViaje . "\n";
+            echo "***********************************************"."\n";
+            echo "¿Está seguro que desea eliminar este Viaje? (s/n): ";
+            $confirmacion=trim(fgets(STDIN));
+            if(strtolower($confirmacion) == 's'){
+                if($unViaje->eliminar()){
+                    echo "Viaje eliminado correctamente.\n";
+                }else{
+                    echo "Error al eliminar el viaje: ".$unViaje->getMensaje()."\n";
+                }
+            }else{
+                echo "Eliminación cancelada.\n";
+            }
+        }else{
+            echo "Viaje no encontrado\n";
+        }
+        echo "\n***********************************" . "\n";
+    }
+
+    private function listarViajes(){
+        $unViaje=new Viaje();
+        $colViajes=$unViaje->listar();
+        if(count($colViajes)>0){
+            echo "\n<<<<<<<<<<< LISTADO DE VIAJES >>>>>>>>>>>>" . "\n";
+            foreach ($colViajes as $viaje) {
+                echo $viaje."\n";
+            }
+        } else {
+            echo "No hay Viajes registrados.\n";
+        }
+        echo "<<<<<<<<<<<< FIN DE LISTADO >>>>>>>>>>>>" . "\n";
+        echo "\n";
+    }
 }
 
 // Menú
 $test = new TestViaje();
-$test->mostrarMenu();
+$test->mostrarMenuViaje();
 
 
