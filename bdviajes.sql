@@ -45,7 +45,7 @@ CREATE TABLE pasajero (
     nroTicket int,
     nroDocumento varchar(15),
     PRIMARY KEY (idPasajero),
-	FOREIGN KEY (idViaje) REFERENCES viaje (idViaje) ON UPDATE CASCADE ON DELETE RESTRICT,
+	FOREIGN KEY (idViaje) REFERENCES viaje (idViaje) ON UPDATE CASCADE ON DELETE SET NULL,
     FOREIGN KEY (nroDocumento) REFERENCES Persona(nroDocumento) ON UPDATE CASCADE ON DELETE CASCADE	
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
  
