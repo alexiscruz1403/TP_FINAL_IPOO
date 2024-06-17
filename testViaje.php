@@ -170,7 +170,6 @@ class TestViaje{
             echo "----------------------\n";
             echo "Opcion: ";
             $opcion = trim(fgets(STDIN));
-    
             switch ($opcion) {
                 case 1:
                     $this->insertarViaje();
@@ -250,11 +249,14 @@ class TestViaje{
             $idEmpresa=trim(fgets(STDIN));
             echo "Ingrese el nuevo costo: ";
             $importe=trim(fgets(STDIN));
+            echo "Ingrese el nuevo costo abonado: ";
+            $costoAbonado=trim(fgets(STDIN));
             $unViaje->setDestino($destino);
             $unViaje->setCantMaxPasajeros($cantMaxPasajeros);
             $unViaje->setNumeroEmpleado($numEmpleado);
             $unViaje->setIdEmpresa($idEmpresa);
             $unViaje->setImporte($importe);
+            $unViaje->setCostosAbonados($costoAbonado);
             if($unViaje->modificar()){
                 echo "Viaje modificado correctamente.\n";
             }else{
@@ -310,6 +312,7 @@ class TestViaje{
 
 // Menú
 $test = new TestViaje();
+$test->mostrarMenuEmpresa();
 $test->mostrarMenuViaje();
 
 

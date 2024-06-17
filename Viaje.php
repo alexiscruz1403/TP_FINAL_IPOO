@@ -297,17 +297,13 @@ class Viaje{
     public function venderPasaje($unPasajero){
         $vendido=false;
         if($this->hayPasajesDisponibles()){
-            echo "hay pasajes disponibles\n";
             $unPasajero->setIdViaje($this->getIdViaje());
-            if($unPasajero->modificar()){
-                echo "un pasajero modificado\n";
-                $this->setCostosAbonados($this->getCostosAbonados()+$this->getImporte());
-                if($this->modificar()){
-                    echo "viaje modificado\n";
-                    $vendido=true;
-                }else{
-                    $this->setMensaje($unPasajero->getMensaje());
-                }
+            $costosAbonados=$this->getCostosAbonados();
+            $importe=$this->getImporte();
+            $costosAbonados+=$importe;
+            $this->setCostosAbonados($costosAbonados);
+            if($this->modificar()){
+                $vendido=true;
             }else{
                 $this->setMensaje($unPasajero->getMensaje());
             }
