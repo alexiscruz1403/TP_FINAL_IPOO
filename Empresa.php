@@ -1,5 +1,7 @@
 <?php
 
+include_once 'BaseDatos.php';
+
 class Empresa{
     //Atributos
     private $idEmpresa;
@@ -14,8 +16,7 @@ class Empresa{
         $this->direccion="";
         $this->mensaje="";
     }
-    public function cargar($unIdEmpresa,$unNombre,$unaDireccion){
-        $this->idEmpresa=$unIdEmpresa;
+    public function cargar($unNombre,$unaDireccion){
         $this->nombre=$unNombre;
         $this->direccion=$unaDireccion;
     }
@@ -164,11 +165,8 @@ class Empresa{
             }
             if($base->ejecutar($consulta)){
                 while($registro=$base->registro()){
-                    $idEmpresa=$registro['idEmpresa'];
-                    $nombre=$registro['nombre'];
-                    $direccion=$registro['direccion'];
                     $unaEmpresa=new Empresa();
-                    $unaEmpresa->cargar($idEmpresa,$nombre,$direccion);
+                    $unaEmpresa->buscar($registro['$idEmpresa']);
                     array_push($colPasajeros,$unaEmpresa);
                 }
             }else{
