@@ -242,8 +242,10 @@ class TestViaje
         $numEmpleado = trim(fgets(STDIN));
         echo "Ingrese el costo del viaje: ";
         $importe = trim(fgets(STDIN));
+        echo "Ingrese los costos abonados: ";
+        $costosAbonados = trim(fgets(STDIN));
         $unViaje = new Viaje();
-        $unViaje->cargar($destino, $cantMaxPasajeros, $importe, $idEmpresa, $numEmpleado);
+        $unViaje->cargar($destino, $cantMaxPasajeros, $importe, $idEmpresa, $numEmpleado, $costosAbonados);
         if ($unViaje->insertar()) {
             echo "Viaje insertado correctamente.\n";
         } else {
