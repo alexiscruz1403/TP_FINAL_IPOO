@@ -82,7 +82,7 @@ class TestViaje
         } while ($opcion != 6);
     }
 
-    private function insertarEmpresa()
+    public function insertarEmpresa()
     {
         echo "\n***********************************" . "\n";
         echo "Ingrese el nombre de la empresa: ";
@@ -100,7 +100,7 @@ class TestViaje
         echo "\n***********************************" . "\n";
     }
 
-    private function buscarEmpresa()
+    public function buscarEmpresa()
     {
         echo "Ingrese el ID de la empresa a buscar: ";
         $id = trim(fgets(STDIN));
@@ -115,7 +115,7 @@ class TestViaje
         echo "\n***********************************" . "\n";
     }
 
-    private function modificarEmpresa()
+    public function modificarEmpresa()
     {
         echo "Ingrese el ID de la empresa a modificar: ";
         $id = trim(fgets(STDIN));
@@ -144,7 +144,7 @@ class TestViaje
     }
 
 
-    private function eliminarEmpresa()
+    public function eliminarEmpresa()
     {
         echo "Ingrese el ID de la empresa a eliminar: ";
         $id = trim(fgets(STDIN));
@@ -173,7 +173,7 @@ class TestViaje
     }
 
 
-    private function listarEmpresas()
+    public function listarEmpresas()
     {
         $empresa = new Empresa();
         $empresas = $empresa->listar();
@@ -229,7 +229,7 @@ class TestViaje
         } while ($opcion != 6);
     }
 
-    private function insertarViaje()
+    public function insertarViaje()
     {
         echo "\n***********************************" . "\n";
         echo "Ingrese el destino: ";
@@ -252,7 +252,7 @@ class TestViaje
         echo "\n***********************************" . "\n";
     }
 
-    private function buscarViaje()
+    public function buscarViaje()
     {
         echo "Ingrese el ID del Viaje a buscar: ";
         $idViaje = trim(fgets(STDIN));
@@ -266,7 +266,7 @@ class TestViaje
         echo "\n***********************************" . "\n";
     }
 
-    private function modificarViaje()
+    public function modificarViaje()
     {
         echo "Ingrese el ID del Viaje a modificar: ";
         $idViaje = trim(fgets(STDIN));
@@ -304,7 +304,7 @@ class TestViaje
         echo "\n***********************************" . "\n";
     }
 
-    private function eliminarViaje()
+    public function eliminarViaje()
     {
         echo "Ingrese el ID del Viaje a eliminar: ";
         $idViaje = trim(fgets(STDIN));
@@ -330,7 +330,7 @@ class TestViaje
         echo "\n***********************************" . "\n";
     }
 
-    private function listarViajes()
+    public function listarViajes()
     {
         $unViaje = new Viaje();
         $colViajes = $unViaje->listar();
