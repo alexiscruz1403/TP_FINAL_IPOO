@@ -4,7 +4,7 @@ include_once 'BaseDatos.php';
 class Pasajero extends Persona{
     //Atributos
     private $idPasajero;
-    private $idViaje;
+    private $objViaje;
     private $nroAsiento;
     private $nroTicket;
 
@@ -12,22 +12,21 @@ class Pasajero extends Persona{
     public function __construct(){
         parent::__construct();
         $this->idPasajero="";
-        $this->idViaje="";
     }
-    public function cargar($unNroDocumento,$unNombre,$unApellido,$unTelefono,$unIdViaje="",$unNroAiento="",$unNroTicket=""){
+    public function cargar($unNroDocumento,$unNombre,$unApellido,$unTelefono,$unViaje="",$unNroAiento="",$unNroTicket=""){
         parent::cargar($unNroDocumento,$unNombre,$unApellido,$unTelefono);
         $this->idPasajero="";
         $this->nroAsiento=$unNroAiento;
         $this->nroTicket=$unNroTicket;
-        $this->idViaje=$unIdViaje;
+        $this->objViaje=$unViaje;
     }
 
     //Observadores
     public function getIdPasajero(){
         return $this->idPasajero;
     }
-    public function getIdViaje(){
-        return $this->idViaje;
+    public function getViaje(){
+        return $this->objViaje;
     }
     public function getNroAsiento(){
         return $this->nroAsiento;
@@ -38,7 +37,7 @@ class Pasajero extends Persona{
     public function __toString(){
         $cadena=parent::__toString();
         $cadena.="Id pasajero: ".$this->getIdPasajero()."\n".
-        "Id viaje: ".$this->getIdViaje()."\n".
+        "Viaje: \n".$this->getViaje().
         "Numero asiento: ".$this->getNroAsiento()."\n".
         "Numero ticket: ".$this->getNroTicket()."\n";
         return $cadena;
@@ -48,8 +47,8 @@ class Pasajero extends Persona{
     public function setIdPasajero($unIdPasajero){
         $this->idPasajero=$unIdPasajero;
     }
-    public function setIdViaje($unIdViaje){
-        $this->idViaje=$unIdViaje;
+    public function setViaje($unViaje){
+        $this->objViaje=$unViaje;
     }
     public function setNroAsiento($unNroAsiento){
         $this->nroAsiento=$unNroAsiento;
@@ -72,11 +71,16 @@ class Pasajero extends Persona{
             $consulta="SELECT * FROM pasajero WHERE idPasajero=".$idPasajero;
             if($base->ejecutar($consulta)){
                 while($registro=$base->registro()){
+                    $unViaje=new Viaje();
                     if(parent::buscar($registro['nroDocumento'])){
-                        $this->setIdPasajero($registro['idPasajero']);
-                        $this->setIdViaje($registro['idViaje']);
-                        $this->setNroAsiento($registro['nroAsiento']); 
-                        $this->setNroTicket($registro['nroTicket']); 
+                        $idPasajero=$registro['idPasajero'];
+                        $nroTicket=$registro['nroTicket'];
+                        $nroAsiento=$registro['nroAsiento'];
+                        $viaje=$unViaje->buscar($registro['idViaje']);
+                        $this->setIdPasajero($idPasajero);
+                        $this->setNroTicket($nroTicket);
+                        $this->setNroAsiento($nroAsiento);
+                        $this->setViaje($viaje);
                     }else{
                         $this->setMensaje($base->getError());
                     }
@@ -101,7 +105,7 @@ class Pasajero extends Persona{
         if($base->iniciar()){
             if(parent::insertar()){
                 $consulta="INSERT INTO pasajero(nroDocumento,idViaje,nroAsiento,nroTicket) VALUES ('".$this->getNroDocumento().
-                "',".$this->getIdViaje().",".$this->getNroAsiento().",".$this->getNroTicket().")";
+                "',".$this->getViaje()->getIdViaje().",".$this->getNroAsiento().",".$this->getNroTicket().")";
                 if($base->ejecutar($consulta)){
                     $agregado=true;
                 }else{
@@ -151,7 +155,7 @@ class Pasajero extends Persona{
         $base=new BaseDatos();
         if($base->iniciar()){
             $consulta="UPDATE pasajero SET nroDocumento='".$this->getNroDocumento().
-            "',idViaje=".$this->getIdViaje().
+            "',idViaje=".$this->getViaje()->getIdViaje().
             ",nroAsiento=".$this->getNroAsiento().
             ",nroTicket=".$this->getNroTicket().
             " WHERE idPasajero=".$this->getIdPasajero();

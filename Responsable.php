@@ -55,6 +55,7 @@ class Responsable extends Persona{
                     if(parent::buscar($registro['nroDocumento'])){
                         $this->setNumeroEmpleado($registro['numeroEmpleado']);
                         $this->setNumeroLicencia($registro['numeroLicencia']);
+                        $encontrado=true;
                     }else{
                         $this->setMensaje($base->getError());
                     }
