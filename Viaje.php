@@ -25,13 +25,13 @@ class Viaje{
         $this->costosAbonados="";
         $this->mensaje="";
     }
-    public function cargar($unDestino,$unaCantMaxPasajeros,$unImporte,$unIdEmpresa,$unNumeroEmpleado){
+    public function cargar($unDestino,$unaCantMaxPasajeros,$unImporte,$unIdEmpresa,$unNumeroEmpleado,$costosAbonados){
         $this->destino=$unDestino;
         $this->cantMaxPasajeros=$unaCantMaxPasajeros;
         $this->importe=$unImporte;
         $this->idEmpresa=$unIdEmpresa;
         $this->numeroEmpleado=$unNumeroEmpleado;
-        $this->costosAbonados=0;
+        $this->costosAbonados=$costosAbonados;
     }
     public function cargarColeccion(){
         $base=new BaseDatos();
@@ -269,7 +269,15 @@ class Viaje{
             if($base->ejecutar($consulta)){
                 while($registro=$base->registro()){
                     $unViaje=new Viaje();
-                    $unViaje->buscar($registro['idViaje']);
+                    $idViaje=$registro['idViaje'];
+                    $destino=$registro['destino'];
+                    $cantMaxPasajeros=$registro['cantMaxPasajeros'];
+                    $importe=$registro['importe'];
+                    $idEmpresa=$registro['idEmpresa'];
+                    $numeroEmpleado=$registro['numeroEmpleado'];
+                    $costosAbonados=$registro['costosAbonados'];
+                    $unViaje->cargar($destino,$cantMaxPasajeros,$importe,$idEmpresa,$numeroEmpleado,$costosAbonados);
+                    $unViaje->setIdViaje($idViaje);
                     array_push($colPasajeros,$unViaje);
                 }
             }else{
