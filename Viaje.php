@@ -6,8 +6,6 @@ class Viaje{
     private $destino;
     private $cantMaxPasajeros;
     private $importe;
-    private $idEmpresa;
-    private $numeroEmpleado;
     private $costosAbonados;
     private $colPasajeros;
     private $objEmpresa;
@@ -20,49 +18,18 @@ class Viaje{
         $this->destino="";
         $this->cantMaxPasajeros="";
         $this->importe="";
-        $this->idEmpresa="";
-        $this->numeroEmpleado="";
         $this->costosAbonados="";
+        $this->colPasajeros=array();
         $this->mensaje="";
     }
-    public function cargar($unDestino,$unaCantMaxPasajeros,$unImporte,$unIdEmpresa,$unNumeroEmpleado,$costosAbonados){
+    public function cargar($unDestino,$unaCantMaxPasajeros,$unImporte,$costosAbonados,$unaEmpresa,$unResponsable,$unaColPasajeros){
         $this->destino=$unDestino;
         $this->cantMaxPasajeros=$unaCantMaxPasajeros;
         $this->importe=$unImporte;
-        $this->idEmpresa=$unIdEmpresa;
-        $this->numeroEmpleado=$unNumeroEmpleado;
         $this->costosAbonados=$costosAbonados;
-    }
-    public function cargarColeccion(){
-        $base=new BaseDatos();
-        if($base->iniciar()){
-            $unaPersona=new Pasajero();
-            $coleccion=$unaPersona->listar("idViaje=".$this->getIdViaje());
-            $this->setColeccionPasajeros($coleccion);
-        }else{
-            $this->setMensaje($base->getError());
-        }
-        $this->setColeccionPasajeros($coleccion);
-    }
-    public function cargarEmpresa(){
-        $base=new BaseDatos();
-        if($base->iniciar()){
-            $unaEmpresa=new Empresa();
-            $unaEmpresa->buscar($this->getIdEmpresa());
-            $this->setEmpresa($unaEmpresa);
-        }else{
-            $this->setMensaje($base->getError());
-        }
-    }
-    public function cargarResponsable(){
-        $base=new BaseDatos();
-        if($base->iniciar()){
-            $unResponsable=new Responsable();
-            $unResponsable->buscar($this->getNumeroEmpleado());
-            $this->setResponsable($unResponsable);
-        }else{
-            $this->setMensaje($base->getError());
-        }
+        $this->objEmpresa=$unaEmpresa;
+        $this->objResponsable=$unResponsable;
+        $this->colPasajeros=$unaColPasajeros;
     }
 
     //Observadores
@@ -78,26 +45,17 @@ class Viaje{
     public function getImporte(){
         return $this->importe;
     }
-    public function getIdEmpresa(){
-        return $this->idEmpresa;
-    }
-    public function getNumeroEmpleado(){
-        return $this->numeroEmpleado;
-    }
     public function getCostosAbonados(){
         return $this->costosAbonados;
     }
-    public function getColeccionPasajeros(){
-        $this->cargarColeccion();
-        return $this->colPasajeros;
-    }
     public function getEmpresa(){
-        $this->cargarEmpresa();
         return $this->objEmpresa;
     }
     public function getResponsable(){
-        $this->cargarResponsable();
         return $this->objResponsable;
+    }
+    public function getColeccionPasajeros(){
+        return $this->colPasajeros;
     }
     public function getMensaje(){
         return $this->mensaje;
@@ -107,8 +65,8 @@ class Viaje{
         "Destino: ".$this->getDestino()."\n".
         "CantMaxPasajeros: ".$this->getCantMaxPasajeros()."\n".
         "Importe: ".$this->getImporte()."\n".
-        "IdEmpresa: ".$this->getIdEmpresa()."\n".
-        "NumeroEmpleado: ".$this->getNumeroEmpleado()."\n".
+        "Empresa: \n".$this->getEmpresa().
+        "Responsable: \n".$this->getResponsable().
         "Cantidad Pasajeros: ".count($this->getColeccionPasajeros())."\n".
         "Costos abonados: ".$this->getCostosAbonados()."\n";
     }
@@ -125,12 +83,6 @@ class Viaje{
     }
     public function setImporte($unImporte){
         $this->importe=$unImporte;
-    }
-    public function setIdEmpresa($unIdEmpresa){
-        $this->idEmpresa=$unIdEmpresa;
-    }
-    public function setNumeroEmpleado($unNumeroEmpleado){
-        $this->numeroEmpleado=$unNumeroEmpleado;
     }
     public function setCostosAbonados($costosAbonados){
         $this->costosAbonados=$costosAbonados;
@@ -162,14 +114,19 @@ class Viaje{
         if($base->iniciar()){
             $consulta="SELECT * FROM viaje WHERE idViaje=".$idViaje;
             if($base->ejecutar($consulta)){
+                $unaEmpresa=new Empresa();
+                $unResponsable=new Responsable();
+                $unPasajero=new Pasajero();
                 while($registro=$base->registro()){
-                    $this->setIdViaje($registro['idViaje']);
-                    $this->setDestino($registro['destino']);
-                    $this->setCantMaxPasajeros($registro['cantMaxPasajeros']);
-                    $this->setImporte($registro['importe']);
-                    $this->setIdEmpresa($registro['idEmpresa']);
-                    $this->setNumeroEmpleado($registro['numeroEmpleado']);
-                    $this->setCostosAbonados($registro['costosAbonados']);
+                    $unaEmpresa->buscar($registro['idEmpresa']);
+                    $unResponsable->buscar($registro['numeroEmpleado']);
+                    $destino=$registro['destino'];
+                    $cantidadMaxima=$registro['cantMaxPasajeros'];
+                    $importe=$registro['importe'];
+                    $costosAbonados=$registro['costosAbonados'];
+                    $colPasajeros=$unPasajero->listar("idViaje=".$idViaje);
+                    $this->cargar($destino,$cantidadMaxima,$importe,$costosAbonados,$unaEmpresa,$unResponsable,$colPasajeros);
+                    $this->setIdViaje($idViaje);
                     $encontrado=true;
                 }
             }else{
@@ -189,9 +146,11 @@ class Viaje{
     public function insertar(){
         $base=new BaseDatos();
         $agregado=false;
+        $idEmpresa=$this->getEmpresa()->getIdEmpresa();
+        $numeroEmpleado=$this->getResponsable()->getNumeroEmpleado();
         if($base->iniciar()){
             $consulta="INSERT INTO viaje(destino,cantMaxPasajeros,importe,idEmpresa,numeroEmpleado,costosAbonados) VALUES ('".$this->getDestino().
-            "',".$this->getCantMaxPasajeros().",".$this->getImporte().",".$this->getIdEmpresa().",".$this->getNumeroEmpleado().",".$this->getCostosAbonados().")";
+            "',".$this->getCantMaxPasajeros().",".$this->getImporte().",".$idEmpresa.",".$numeroEmpleado.",".$this->getCostosAbonados().")";
             if($base->ejecutar($consulta)){
                 $agregado=true;
             }else{
@@ -236,8 +195,8 @@ class Viaje{
             $consulta="UPDATE viaje SET destino='".$this->getDestino().
             "',cantMaxPasajeros=".$this->getCantMaxPasajeros().
             ",importe=".$this->getImporte().
-            ",idEmpresa=".$this->getIdEmpresa().
-            ",numeroEmpleado=".$this->getNumeroEmpleado().
+            ",idEmpresa=".$this->getEmpresa()->getIdEmpresa().
+            ",numeroEmpleado=".$this->getResponsable()->getNumeroEmpleado().
             ",costosAbonados=".$this->getCostosAbonados().
             " WHERE idViaje=".$this->getIdViaje();
             if($base->ejecutar($consulta)){
@@ -259,7 +218,7 @@ class Viaje{
      * @return array
      */
     public function listar($condicion=""){
-        $colPasajeros=array();
+        $colViajes=array();
         $base=new BaseDatos();
         if($base->iniciar()){
             $consulta="SELECT * FROM viaje";
@@ -269,16 +228,8 @@ class Viaje{
             if($base->ejecutar($consulta)){
                 while($registro=$base->registro()){
                     $unViaje=new Viaje();
-                    $idViaje=$registro['idViaje'];
-                    $destino=$registro['destino'];
-                    $cantMaxPasajeros=$registro['cantMaxPasajeros'];
-                    $importe=$registro['importe'];
-                    $idEmpresa=$registro['idEmpresa'];
-                    $numeroEmpleado=$registro['numeroEmpleado'];
-                    $costosAbonados=$registro['costosAbonados'];
-                    $unViaje->cargar($destino,$cantMaxPasajeros,$importe,$idEmpresa,$numeroEmpleado,$costosAbonados);
-                    $unViaje->setIdViaje($idViaje);
-                    array_push($colPasajeros,$unViaje);
+                    $unViaje->buscar($registro['idViaje']);
+                    array_push($colViajes,$unViaje);
                 }
             }else{
                 $this->setMensaje($base->getError());
@@ -286,7 +237,7 @@ class Viaje{
         }else{
             $this->setMensaje($base->getError());
         }
-        return $colPasajeros;
+        return $colViajes;
     }
 
     /**

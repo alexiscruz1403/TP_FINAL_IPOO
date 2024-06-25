@@ -2,7 +2,6 @@
 
 include_once 'BaseDatos.php';
 include_once 'Persona.php';
-include_once 'Persona.php';
 include_once 'Responsable.php';
 include_once 'Pasajero.php';
 include_once 'Empresa.php';
@@ -242,14 +241,23 @@ class TestViaje
         $numEmpleado = trim(fgets(STDIN));
         echo "Ingrese el costo del viaje: ";
         $importe = trim(fgets(STDIN));
-        echo "Ingrese los costos abonados: ";
-        $costosAbonados = trim(fgets(STDIN));
-        $unViaje = new Viaje();
-        $unViaje->cargar($destino, $cantMaxPasajeros, $importe, $idEmpresa, $numEmpleado, $costosAbonados);
-        if ($unViaje->insertar()) {
-            echo "Viaje insertado correctamente.\n";
-        } else {
-            echo "Error al insertar el Viaje: " . $unViaje->getMensaje() . "\n";
+        $unaEmpresa=new Empresa();
+        $unResponsable=new Responsable();
+        if($unaEmpresa->buscar($idEmpresa)){
+            if($unResponsable->buscar($numEmpleado)){
+                $unViaje = new Viaje();
+                $unViaje->cargar($destino,$cantMaxPasajeros,$importe,0,$unaEmpresa,$unResponsable,array());
+                if ($unViaje->insertar()) {
+                    echo "Viaje insertado correctamente.\n";
+                } else {
+                    echo "Error al insertar el Viaje: " . $unViaje->getMensaje() . "\n";
+                }
+            }else{
+                echo $unResponsable->getMensaje();
+                echo "No se encontro al responsable\n";
+            }
+        }else{
+            echo "No se encontro a la empresa\n";
         }
         echo "\n***********************************" . "\n";
     }
@@ -289,16 +297,21 @@ class TestViaje
             $importe = trim(fgets(STDIN));
             echo "Ingrese el nuevo costo abonado: ";
             $costoAbonado = trim(fgets(STDIN));
-            $unViaje->setDestino($destino);
-            $unViaje->setCantMaxPasajeros($cantMaxPasajeros);
-            $unViaje->setNumeroEmpleado($numEmpleado);
-            $unViaje->setIdEmpresa($idEmpresa);
-            $unViaje->setImporte($importe);
-            $unViaje->setCostosAbonados($costoAbonado);
-            if ($unViaje->modificar()) {
-                echo "Viaje modificado correctamente.\n";
-            } else {
-                echo "Error al modificar el Viaje: " . $unViaje->getMensaje() . "\n";
+            $unaEmpresa=new Empresa();
+            if($unaEmpresa->buscar($idEmpresa)){
+                $unResponsable=new Responsable();
+                if($unResponsable->buscar($numEmpleado)){
+                    $unViaje->cargar($destino,$cantMaxPasajeros,$importe,$costoAbonado,$unaEmpresa,$unResponsable,$unViaje->getColeccionPasajeros());
+                    if ($unViaje->modificar()) {
+                        echo "Viaje modificado correctamente.\n";
+                    } else {
+                        echo "Error al modificar el Viaje: " . $unViaje->getMensaje() . "\n";
+                    }
+                }else{
+                    echo "Empleado no encontrado\n";
+                }
+            }else{
+                echo "Empresa no encontrada\n";
             }
         } else {
             echo "Viaje no encontrado.\n";
@@ -315,7 +328,7 @@ class TestViaje
         if ($unViaje->buscar($idViaje)) {
             echo "Viaje encontrado:\n" . $unViaje . "\n";
             echo "***********************************************" . "\n";
-            echo "¿Está seguro que desea eliminar este Viaje? (s/n): ";
+            echo "¿Está seguro que desea eliminar este Viaje? Recuerde que los pasajeros asociados a este viaje no se eliminaran (s/n): ";
             $confirmacion = trim(fgets(STDIN));
             if (strtolower($confirmacion) == 's') {
                 if ($unViaje->eliminar()) {
