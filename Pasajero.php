@@ -41,7 +41,8 @@ class Pasajero extends Persona{
         $cadena .= "Id pasajero: " . $this->getIdPasajero() . "\n";
         $cadena .= "Viaje:\n";
         if ($this->getViaje()!==null) {
-            $cadena .= "ID de viaje: " . $this->getViaje() . "\n"; 
+            $cadena .= "ID de viaje: " . $this->getViaje()->getIdViaje() . "\n".
+            "Destino: ". $this->getViaje()->getDestino()."\n"; 
         } else {
             $cadena .= "No se ha asignado un viaje.\n";
         }
@@ -202,12 +203,18 @@ class Pasajero extends Persona{
                     $unaPersona=new Persona();
                     $unaPersona->buscar($registro['nroDocumento']);
                     $unPasajero = new Pasajero();
+                    $unViaje=new Viaje();
+                    if(isset($registro['idViaje'])){
+                        $unViaje->buscar($registro['idViaje']);
+                    }else{
+                        $unViaje=null;
+                    }
                     $unPasajero->cargar(
                          $unaPersona->getNroDocumento(),
                          $unaPersona->getNombre(),
                          $unaPersona->getApellido(),
                          $unaPersona->getTelefono(),
-                         $registro['idViaje'],
+                         $unViaje,
                          $registro['nroAsiento'], // ok 2
                          $registro['nroTicket'], //ok 3
                     );
