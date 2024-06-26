@@ -70,25 +70,28 @@ class Persona{
      * Retorna true si la encuentra o false en caso contrario
      * @return boolean
      */
-    public function buscar($nroDocumento){
-        $base=new BaseDatos();
-        $encontrado=false;
-        if($base->iniciar()){
-            $consulta="SELECT * FROM persona WHERE nroDocumento=".$nroDocumento;
-            if($base->ejecutar($consulta)){
-                while($registro=$base->registro()){
+    public function buscar($nroDocumento) {
+        $base = new BaseDatos();
+        $encontrado = false;
+        
+        if ($base->iniciar()) {
+            $consulta = "SELECT * FROM persona WHERE nroDocumento=" . $nroDocumento;
+            
+            if ($base->ejecutar($consulta)) {
+                while ($registro = $base->registro()) {
                     $this->setNroDocumento($registro['nroDocumento']);
                     $this->setNombre($registro['nombre']);
                     $this->setApellido($registro['apellido']);
-                    $this->setTelefono(($registro['telefono']));
-                    $encontrado=true;
+                    $this->setTelefono($registro['telefono']);
+                    $encontrado = true;
                 }
-            }else{
+            } else {
                 $this->setMensaje($base->getError());
             }
-        }else{
+        } else {
             $this->setMensaje($base->getError());
         }
+        
         return $encontrado;
     }
 

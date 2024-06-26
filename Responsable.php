@@ -75,25 +75,25 @@ class Responsable extends Persona{
      * @return boolean
      */
     public function insertar(){
-        $base=new BaseDatos();
-        $agregado=false;
-        if($base->iniciar()){
-            if(parent::insertar()){
-                $consulta="INSERT INTO responsable(nroDoc,numeroLicencia) VALUES ('".$this->getNroDocumento()."',".
-                $this->getNumeroLicencia().")";
-                if($base->ejecutar($consulta)){
-                    $agregado=true;
-                }else{
+        $base = new BaseDatos();
+        $agregado = false;
+        if ($base->iniciar()) {
+            if (parent::insertar()) {
+                $consulta = "INSERT INTO responsable (nroDocumento, numeroLicencia) VALUES ('" . $this->getNroDocumento() . "', '" . $this->getNumeroLicencia() . "')";
+                if ($base->ejecutar($consulta)) {
+                    $agregado = true;
+                } else {
                     $this->setMensaje($base->getError());
                 }
-            }else{
+            } else {
                 $this->setMensaje($base->getError());
             }
-        }else{
+        } else {
             $this->setMensaje($base->getError());
         }
         return $agregado;
     }
+    
 
     /**
      * Elimina el registro donde numeroEmpleado coincida con el valor actual de la instancia
@@ -172,4 +172,28 @@ class Responsable extends Persona{
         }
         return $colPasajeros;
     }
+
+// Metodo para buscar un responsable, por el nroDOcumento
+    public function buscarPorDocumento($nroDocumento) {
+        $base = new BaseDatos();
+        $consulta = "SELECT * FROM responsable WHERE nroDocumento = '" . $nroDocumento . "'";
+        if ($base->Iniciar()) {
+            if ($base->Ejecutar($consulta)) {
+                if ($row = $base->Registro()) {
+                    $this->setNumeroEmpleado($row['numeroEmpleado']);
+                    $this->setNumeroLicencia($row['numeroLicencia']);
+                    $this->setNroDocumento($row['nroDocumento']);
+                    return true;
+                }
+            } else {
+                $this->setMensaje($base->getError());
+            }
+        } else {
+            $this->setMensaje($base->getError());
+        }
+        return false;
+    }
+
 }
+
+

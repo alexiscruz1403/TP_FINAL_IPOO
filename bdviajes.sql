@@ -13,7 +13,7 @@ CREATE TABLE persona(
     nroDocumento varchar(15),
     nombre varchar(150),
     apellido varchar(150),
-    telefono INT,
+    telefono bigint,
     PRIMARY KEY(nroDocumento)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8; 
 
