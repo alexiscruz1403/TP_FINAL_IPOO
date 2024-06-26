@@ -203,12 +203,12 @@ class TestViaje
             $pasajero->setNroTicket($nroTicket);
         }
 
-        // Aplicar la modificación en la base de datos
         if ($pasajero->modificar()) {
             echo "Pasajero modificado correctamente.\n";
         } else {
             echo "Error al modificar el pasajero: " . $pasajero->getMensaje() . "\n";
         }
+
     } else {
         echo "Pasajero no encontrado." . "\n";
     }

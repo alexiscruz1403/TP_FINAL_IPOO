@@ -166,8 +166,8 @@ class Pasajero extends Persona{
         $modificado=false;
         $base=new BaseDatos();
         if($base->iniciar()){
-            $consulta="UPDATE pasajero SET 
-                idViaje=".$this->getViaje()->getIdViaje().
+            $idViaje = $this->getViaje() ? $this->getViaje()->getIdViaje() : 'NULL';
+            $consulta="UPDATE pasajero SET idViaje=".$idViaje.
                 ",nroAsiento=".$this->getNroAsiento().
                 ",nroTicket=".$this->getNroTicket().
                 " WHERE idPasajero=".$this->getIdPasajero();
