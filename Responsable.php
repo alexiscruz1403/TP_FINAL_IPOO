@@ -79,7 +79,7 @@ class Responsable extends Persona{
         $agregado = false;
         if ($base->iniciar()) {
             if (parent::insertar()) {
-                $consulta = "INSERT INTO responsable (nroDocumento, numeroLicencia) VALUES ('" . $this->getNroDocumento() . "', '" . $this->getNumeroLicencia() . "')";
+                $consulta = "INSERT INTO responsable (nroDocumento, numeroLicencia) VALUES ('" . $this->getNroDocumento() . "', " . $this->getNumeroLicencia() . ")";
                 if ($base->ejecutar($consulta)) {
                     $agregado = true;
                 } else {
@@ -179,7 +179,8 @@ class Responsable extends Persona{
         $consulta = "SELECT * FROM responsable WHERE nroDocumento = '" . $nroDocumento . "'";
         if ($base->Iniciar()) {
             if ($base->Ejecutar($consulta)) {
-                if ($row = $base->Registro()) {
+                if ($row = $base->registro()) {
+                    parent::buscar($nroDocumento);
                     $this->setNumeroEmpleado($row['numeroEmpleado']);
                     $this->setNumeroLicencia($row['numeroLicencia']);
                     $this->setNroDocumento($row['nroDocumento']);

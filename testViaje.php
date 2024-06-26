@@ -525,9 +525,8 @@ public function listarPasajeros() {
                     echo "Responsable registrado correctamente.\n";
                     
                     if ($unResponsable->buscarPorDocumento($nroDocumento)) {
-                        $numeroEmpleado = $unResponsable->getNumeroEmpleado();
                         $unViaje = new Viaje();
-                        $unViaje->cargar($destino, $cantMaxPasajeros, $importe, 0, $unaEmpresa, $numeroEmpleado, array());
+                        $unViaje->cargar($destino, $cantMaxPasajeros, $importe, 0, $unaEmpresa, $unResponsable, array());
                         if ($unViaje->insertar()) {
                             echo "Viaje insertado correctamente.\n";
                         } else {
@@ -671,4 +670,5 @@ public function listarPasajeros() {
 // Menú
 $test = new TestViaje();
 $test->mostrarMenuPrincipal();
+
 

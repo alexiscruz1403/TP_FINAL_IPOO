@@ -37,7 +37,7 @@ CREATE TABLE viaje (
     FOREIGN KEY (idEmpresa) REFERENCES empresa (idEmpresa),
 	FOREIGN KEY (numeroEmpleado) REFERENCES responsable (numeroEmpleado)
     ON UPDATE CASCADE
-    ON DELETE CASCADE
+    ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT = 1;
 
 CREATE TABLE pasajero (

@@ -40,7 +40,7 @@ class Pasajero extends Persona{
         $cadena = parent::__toString();
         $cadena .= "Id pasajero: " . $this->getIdPasajero() . "\n";
         $cadena .= "Viaje:\n";
-        if ($this->getViaje() !== null) {
+        if ($this->getViaje()!==null) {
             $cadena .= "ID de viaje: " . $this->getViaje() . "\n"; 
         } else {
             $cadena .= "No se ha asignado un viaje.\n";
@@ -72,8 +72,6 @@ class Pasajero extends Persona{
      * @return boolean
      */
     public function buscar($nroDocumento) {
-        parent::buscar($nroDocumento); // Llama al método buscar de Persona para obtener los datos
-    
         $base = new BaseDatos();
         $encontrado = false;
         
@@ -83,16 +81,16 @@ class Pasajero extends Persona{
             if ($base->ejecutar($consulta)) {
                 if ($registro = $base->registro()) {
                     $unViaje = new Viaje();
-                    
-                    if ($unViaje->buscar($registro['idViaje'])) {
+                    parent::buscar($nroDocumento); // Llama al método buscar de Persona para obtener los datos
                         $this->setIdPasajero($registro['idPasajero']);
-                        $this->setNroDocumento($registro['nroDocumento']);
                         $this->setNroTicket($registro['nroTicket']);
                         $this->setNroAsiento($registro['nroAsiento']);
+                    if (isset($registro['idViaje'])) {
+                        $unViaje->buscar($registro['idViaje']);
                         $this->setViaje($unViaje);
                         $encontrado = true;
                     } else {
-                        $this->setMensaje("Error al buscar el viaje del pasajero.");
+                        $this->setViaje(null);
                     }
                 } else {
                     $this->setMensaje("No se encontró ningún pasajero con ese documento.");
@@ -115,7 +113,7 @@ class Pasajero extends Persona{
         $agregado=false;
         if($base->iniciar()){
             if(parent::insertar()){
-                $consulta="INSERT INTO pasajero(nroDocumento,idViaje,nroAsiento,nroTicket) VALUES ('" .parent::getNroDocumento()."'
+                $consulta="INSERT INTO pasajero(nroDocumento,idViaje,nroAsiento,nroTicket) VALUES ('" .$this->getNroDocumento()."'
                 , '".$this->getViaje()->getIdViaje(). "', '".$this->getNroAsiento(). "', '" .$this->getNroTicket(). "')";
                 if($base->ejecutar($consulta)){
                     $agregado=true;
@@ -200,19 +198,20 @@ class Pasajero extends Persona{
             }
             if ($base->ejecutar($consulta)) {
                 while ($registro = $base->registro()) {
-                    $unaPersona = parent::listar("nroDocumento=" . $registro['nroDocumento'])[0]; 
-
-                    $unPasajero = new Pasajero();
-                    $unPasajero->cargar(
-                        $unaPersona->getNroDocumento(),
-                        $unaPersona->getNombre(),
-                        $unaPersona->getApellido(),
-                        $unaPersona->getTelefono(),
-                        $registro['idViaje'],
-                        $registro['nroAsiento'], // ok 2
-                        $registro['nroTicket'], //ok 3
-                        $registro['idPasajero']
-                    );
+                    // $unaPersona = parent::listar("nroDocumento=" . $registro['nroDocumento'])[0]; 
+                    // $unPasajero = new Pasajero();
+                    // $unPasajero->cargar(
+                    //     $unaPersona->getNroDocumento(),
+                    //     $unaPersona->getNombre(),
+                    //     $unaPersona->getApellido(),
+                    //     $unaPersona->getTelefono(),
+                    //     $registro['idViaje'],
+                    //     $registro['nroAsiento'], // ok 2
+                    //     $registro['nroTicket'], //ok 3
+                    //     $registro['idPasajero']
+                    // );
+                    $unPasajero=new Pasajero();
+                    $unPasajero->buscar($registro['nroDocumento']);
                     array_push($colPasajeros, $unPasajero);
                 }
             } else {

@@ -166,15 +166,15 @@ class Viaje {
         $base = new BaseDatos();
         $agregado = false;
         $idEmpresa = $this->getEmpresa()->getIdEmpresa();
-        $numeroEmpleado = $this->getResponsable();
+        $numeroEmpleado = $this->getResponsable()->getNumeroEmpleado();
         if ($base->iniciar()) {
             // Construir la consulta SQL
             $consulta = "INSERT INTO viaje(destino, cantMaxPasajeros, importe, idEmpresa, numeroEmpleado, costosAbonados) VALUES ('" .
                 $this->getDestino() . "', " .
                 $this->getCantMaxPasajeros() . ", " .
                 $this->getImporte() . ", " .
-                $idEmpresa . ", '" .   // Asegurar que idEmpresa sea tratado como cadena
-                $numeroEmpleado . "', " . // Asegurar que numeroEmpleado sea tratado como cadena
+                $idEmpresa . ", " .   // Asegurar que idEmpresa sea tratado como cadena
+                $numeroEmpleado . ", " . // Asegurar que numeroEmpleado sea tratado como cadena
                 $this->getCostosAbonados() . ")";
             
             // Ejecutar la consulta SQL
