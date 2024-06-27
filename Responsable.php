@@ -51,7 +51,7 @@ class Responsable extends Persona{
         if($base->iniciar()){
             $consulta="SELECT * FROM responsable WHERE numeroEmpleado=".$numeroEmpleado;
             if($base->ejecutar($consulta)){
-                while($registro=$base->registro()){
+                if($registro=$base->registro()){
                     if(parent::buscar($registro['nroDocumento'])){
                         $this->setNumeroEmpleado($registro['numeroEmpleado']);
                         $this->setNumeroLicencia($registro['numeroLicencia']);
@@ -130,8 +130,7 @@ class Responsable extends Persona{
         $base=new BaseDatos();
         if($base->iniciar()){
             $consulta="UPDATE responsable SET numeroLicencia=".$this->getNumeroLicencia().
-            ",nroDocumento='".$this->getNroDocumento().
-            "' WHERE numeroEmpleado=".$this->getNumeroEmpleado();
+            " WHERE numeroEmpleado=".$this->getNumeroEmpleado();
             if($base->ejecutar($consulta)){
                 $modificado=true;
             }else{
@@ -161,7 +160,9 @@ class Responsable extends Persona{
             if($base->ejecutar($consulta)){
                 while($registro=$base->registro()){
                     $unResponsable=new Responsable;
-                    $unResponsable->buscar($registro['numeroEmpleado']);
+                    parent::buscar($registro['nroDocumento']);
+                    $unResponsable->setNumeroLicencia($registro['numeroLicencia']);
+                    $unResponsable->setNumeroEmpleado($registro['numeroEmpleado']);
                     array_push($colPasajeros,$unResponsable);
                 }
             }else{

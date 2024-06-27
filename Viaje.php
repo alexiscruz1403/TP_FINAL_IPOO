@@ -135,14 +135,14 @@ class Viaje {
                 $unaEmpresa = new Empresa();
                 $unResponsable = new Responsable();
                 $unPasajero = new Pasajero();
-                while ($registro = $base->registro()) {
-                    $unaEmpresa->buscar($registro['idEmpresa']);
-                    $unResponsable->buscar($registro['numeroEmpleado']);
+                if($registro = $base->registro()) {
+                    $unaEmpresa="";
+                    $unResponsable="";
                     $destino = $registro['destino'];
                     $cantidadMaxima = $registro['cantMaxPasajeros'];
                     $importe = $registro['importe'];
                     $costosAbonados = $registro['costosAbonados'];
-                    $colPasajeros = $unPasajero->listar("idViaje=" . $idViaje);
+                    $colPasajeros = $unPasajero->listar("idViaje=".$idViaje);
                     $this->cargar($destino, $cantidadMaxima, $importe, $costosAbonados, $unaEmpresa, $unResponsable, $colPasajeros);
                     $this->setIdViaje($idViaje);
                     $encontrado = true;
@@ -257,7 +257,22 @@ class Viaje {
             if ($base->ejecutar($consulta)) {
                 while ($registro = $base->registro()) {
                     $unViaje = new Viaje();
-                    $unViaje->buscar($registro['idViaje']);
+                    $unaEmpresa = new Empresa();
+                    $unPasajero = new Pasajero();
+                    $unResponsable = new Responsable();
+                    $unaEmpresa->buscar($registro['idEmpresa']);
+                    $unResponsable->buscar($registro['numeroEmpleado']);
+                    $colPasajeros = $unPasajero->listar("idViaje=".$registro['idViaje']);
+                    $unViaje->cargar(
+                        $registro['destino'],
+                        $registro['cantMaxPasajeros'],
+                        $registro['importe'],
+                        $registro['costosAbonados'],
+                        $unaEmpresa,
+                        $unResponsable,
+                        $colPasajeros
+                    );
+                    $unViaje->setIdViaje($registro['idViaje']);
                     array_push($colViajes, $unViaje);
                 }
             } else {

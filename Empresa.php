@@ -67,7 +67,7 @@ class Empresa{
         if($base->iniciar()){
             $consulta="SELECT * FROM empresa WHERE idEmpresa=".$idEmpresa;
             if($base->ejecutar($consulta)){
-                while($registro=$base->registro()){
+                if($registro=$base->registro()){
                     $this->setIdEmpresa($registro['idEmpresa']);
                     $this->setNombre($registro['nombre']);
                     $this->setDireccion($registro['direccion']);

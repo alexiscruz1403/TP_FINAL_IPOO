@@ -78,7 +78,7 @@ class Persona{
             $consulta = "SELECT * FROM persona WHERE nroDocumento=" . $nroDocumento;
             
             if ($base->ejecutar($consulta)) {
-                while ($registro = $base->registro()) {
+                if($registro = $base->registro()) {
                     $this->setNroDocumento($registro['nroDocumento']);
                     $this->setNombre($registro['nombre']);
                     $this->setApellido($registro['apellido']);

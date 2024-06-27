@@ -633,9 +633,13 @@ public function listarPasajeros() {
         if ($unViaje->buscar($idViaje)) {
             echo "Viaje encontrado:\n" . $unViaje . "\n";
             echo "***********************************************" . "\n";
-            echo "¿Está seguro que desea eliminar este Viaje? Recuerde que los pasajeros asociados a este viaje no se eliminaran y deberá reasignarles un nuevo vuelo. El ID viaje asignado sera NULO (s/n): ";
+            echo "¿Está seguro que desea eliminar este Viaje? Recuerde que los pasajeros asociados a este viaje tambien seran eliminados (s/n): ";
             $confirmacion = trim(fgets(STDIN));
             if (strtolower($confirmacion) == 's') {
+                $colPasajeros=$unViaje->getColeccionPasajeros();
+                foreach($colPasajeros as $pasajero){
+                    $pasajero->eliminar();
+                }
                 if ($unViaje->eliminar()) {
                     echo "Viaje eliminado correctamente.\n";
                 } else {
