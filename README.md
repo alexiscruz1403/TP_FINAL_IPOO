@@ -1,4 +1,4 @@
-# Trabajo Practico Obligatorio
+# Trabajo Practico Final
 
 # Materia 2024
 
