@@ -75,8 +75,8 @@ class Viaje {
                "Destino: " . $this->getDestino() . "\n" .
                "CantMaxPasajeros: " . $this->getCantMaxPasajeros() . "\n" .
                "Importe: " . $this->getImporte() . "\n" .
-               "Empresa: \n" . $this->getEmpresa() .
-               "Responsable: \n" . $this->getResponsable() .
+               "Empresa: " . $this->getEmpresa()->getNombre()."\n" .
+               "Responsable: " . $this->getResponsable()->getNombre()." ". $this->getResponsable()->getApellido(). "\n" .
                "Cantidad Pasajeros: " . count($this->getColeccionPasajeros()) . "\n" .
                "Costos abonados: " . $this->getCostosAbonados() . "\n";
     }
@@ -136,8 +136,8 @@ class Viaje {
                 $unResponsable = new Responsable();
                 $unPasajero = new Pasajero();
                 if($registro = $base->registro()) {
-                    $unaEmpresa="";
-                    $unResponsable="";
+                    $unaEmpresa->buscar($registro['idEmpresa']);
+                    $unResponsable->buscar($registro['numeroEmpleado']);
                     $destino = $registro['destino'];
                     $cantidadMaxima = $registro['cantMaxPasajeros'];
                     $importe = $registro['importe'];
@@ -262,16 +262,12 @@ class Viaje {
                     $unResponsable = new Responsable();
                     $unaEmpresa->buscar($registro['idEmpresa']);
                     $unResponsable->buscar($registro['numeroEmpleado']);
+                    $destino = $registro['destino'];
+                    $cantidadMaxima = $registro['cantMaxPasajeros'];
+                    $importe = $registro['importe'];
+                    $costosAbonados = $registro['costosAbonados'];
                     $colPasajeros = $unPasajero->listar("idViaje=".$registro['idViaje']);
-                    $unViaje->cargar(
-                        $registro['destino'],
-                        $registro['cantMaxPasajeros'],
-                        $registro['importe'],
-                        $registro['costosAbonados'],
-                        $unaEmpresa,
-                        $unResponsable,
-                        $colPasajeros
-                    );
+                    $unViaje->cargar($destino,$cantidadMaxima,$importe,$costosAbonados,$unaEmpresa,$unResponsable,$colPasajeros);
                     $unViaje->setIdViaje($registro['idViaje']);
                     array_push($colViajes, $unViaje);
                 }

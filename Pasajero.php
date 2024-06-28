@@ -84,6 +84,7 @@ class Pasajero extends Persona{
                     $this->setNroTicket($registro['nroTicket']);
                     $this->setNroAsiento($registro['nroAsiento']);
                     $this->setViaje($unViaje);
+                    $encontrado=true;
                 } else {
                     $this->setMensaje("No se encontró ningún pasajero con ese documento.");
                 }
@@ -193,12 +194,18 @@ class Pasajero extends Persona{
                 while ($registro = $base->registro()) {
                     $unViaje=new Viaje();
                     $unPasajero = new Pasajero();
+                    $unaPersona=new Persona();
+                    $nroAsiento=$registro['nroAsiento'];
+                    $nroTicket=$registro['nroTicket'];
+                    $idPasajero=$registro['idPasajero'];
                     $unViaje->buscar($registro['idViaje']);
-                    $unPasajero->setNroDocumento($registro['nroDocumento']);
-                    $unPasajero->setNroAsiento($registro['nroAsiento']);
-                    $unPasajero->setNroTicket($registro['nroTicket']);
-                    $unPasajero->setViaje($unViaje);
-                    $unPasajero->setIdPasajero($registro['idPasajero']);
+                    $unaPersona->buscar($registro['nroDocumento']);
+                    $nombre=$unaPersona->getNombre();
+                    $apellido=$unaPersona->getApellido();
+                    $nroDocumento=$unaPersona->getNroDocumento();
+                    $telefono=$unaPersona->getTelefono();
+                    $unPasajero->cargar($nroDocumento,$nombre,$apellido,$telefono,$unViaje,$nroAsiento,$nroTicket);
+                    $unPasajero->setIdPasajero($idPasajero);
                     array_push($colPasajeros, $unPasajero);
                 }
             } else {
