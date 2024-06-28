@@ -4,7 +4,7 @@ include_once 'BaseDatos.php';
 class Pasajero extends Persona{
     //Atributos
     private $idPasajero;
-    private $objViaje;
+    private $idViaje;
     private $nroAsiento;
     private $nroTicket;
 
@@ -16,7 +16,7 @@ class Pasajero extends Persona{
     public function cargar($unNroDocumento,$unNombre,$unApellido,$unTelefono,$unViaje="",$unNroAsiento="",$unNroTicket=""){
         parent::cargar($unNroDocumento,$unNombre,$unApellido,$unTelefono);
         $this->idPasajero="";
-        $this->objViaje=$unViaje;
+        $this->idViaje=$unViaje;
         $this->nroAsiento=$unNroAsiento;
         $this->nroTicket=$unNroTicket;
     }
@@ -25,8 +25,8 @@ class Pasajero extends Persona{
     public function getIdPasajero(){
         return $this->idPasajero;
     }
-    public function getViaje(){
-        return $this->objViaje;
+    public function getIdViaje(){
+        return $this->idViaje;
     }
     public function getNroAsiento(){
         return $this->nroAsiento;
@@ -39,9 +39,7 @@ class Pasajero extends Persona{
     public function __toString() {
         $cadena = parent::__toString();
         $cadena .= "Id pasajero: " . $this->getIdPasajero() . "\n";
-        $cadena .= "Viaje:\n";
-        $cadena .= " ID de viaje: " . $this->getViaje()->getIdViaje() . "\n".
-                    " Destino: ". $this->getViaje()->getDestino()."\n"; 
+        $cadena .= "ID de viaje: " . $this->getIdViaje() . "\n".
         $cadena .= "Numero asiento: " . $this->getNroAsiento() . "\n";
         $cadena .= "Numero ticket: " . $this->getNroTicket() . "\n";
         return $cadena;
@@ -51,8 +49,8 @@ class Pasajero extends Persona{
     public function setIdPasajero($unIdPasajero){
         $this->idPasajero=$unIdPasajero;
     }
-    public function setViaje($unViaje){
-        $this->objViaje=$unViaje;
+    public function setIdViaje($unIdViaje){
+        $this->idViaje=$unIdViaje;
     }
     public function setNroAsiento($unNroAsiento){
         $this->nroAsiento=$unNroAsiento;
@@ -77,13 +75,11 @@ class Pasajero extends Persona{
             
             if ($base->ejecutar($consulta)) {
                 if ($registro = $base->registro()) {
-                    $unViaje = new Viaje();
-                    $unViaje->buscar($registro['idViaje']);
                     parent::buscar($nroDocumento);
                     $this->setIdPasajero($registro['idPasajero']);
                     $this->setNroTicket($registro['nroTicket']);
                     $this->setNroAsiento($registro['nroAsiento']);
-                    $this->setViaje($unViaje);
+                    $this->setIdViaje($registro['idViaje']);
                     $encontrado=true;
                 } else {
                     $this->setMensaje("No se encontró ningún pasajero con ese documento.");
@@ -106,9 +102,8 @@ class Pasajero extends Persona{
         $agregado=false;
         if($base->iniciar()){
             if(parent::insertar()){
-                $idViaje=$this->getViaje()->getIdViaje();
                 $consulta="INSERT INTO pasajero(nroDocumento,idViaje,nroAsiento,nroTicket) VALUES ('" .$this->getNroDocumento()."'
-                , '".$idViaje. "', '".$this->getNroAsiento(). "', '" .$this->getNroTicket(). "')";
+                , '".$this->getIdViaje(). "', '".$this->getNroAsiento(). "', '" .$this->getNroTicket(). "')";
                 if($base->ejecutar($consulta)){
                     $agregado=true;
                 }else{
@@ -158,8 +153,7 @@ class Pasajero extends Persona{
         $modificado=false;
         $base=new BaseDatos();
         if($base->iniciar()){
-            $idViaje = $this->getViaje() ? $this->getViaje()->getIdViaje() : 'NULL';
-            $consulta="UPDATE pasajero SET idViaje=".$idViaje.
+            $consulta="UPDATE pasajero SET idViaje=".$this->getIdViaje().
                 ",nroAsiento=".$this->getNroAsiento().
                 ",nroTicket=".$this->getNroTicket().
                 " WHERE idPasajero=".$this->getIdPasajero();
@@ -192,19 +186,18 @@ class Pasajero extends Persona{
             }
             if ($base->ejecutar($consulta)) {
                 while ($registro = $base->registro()) {
-                    $unViaje=new Viaje();
                     $unPasajero = new Pasajero();
                     $unaPersona=new Persona();
                     $nroAsiento=$registro['nroAsiento'];
                     $nroTicket=$registro['nroTicket'];
                     $idPasajero=$registro['idPasajero'];
-                    $unViaje->buscar($registro['idViaje']);
+                    $idViaje=$registro['idViaje'];
                     $unaPersona->buscar($registro['nroDocumento']);
                     $nombre=$unaPersona->getNombre();
                     $apellido=$unaPersona->getApellido();
                     $nroDocumento=$unaPersona->getNroDocumento();
                     $telefono=$unaPersona->getTelefono();
-                    $unPasajero->cargar($nroDocumento,$nombre,$apellido,$telefono,$unViaje,$nroAsiento,$nroTicket);
+                    $unPasajero->cargar($nroDocumento,$nombre,$apellido,$telefono,$idViaje,$nroAsiento,$nroTicket);
                     $unPasajero->setIdPasajero($idPasajero);
                     array_push($colPasajeros, $unPasajero);
                 }
