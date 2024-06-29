@@ -181,4 +181,27 @@ class Empresa{
         }
         return $colPasajeros;
     }
+
+    /**
+     * Retorna una coleccion con los idEmpresa registrados en la tabla empresa
+     * @return array
+     */
+    public function obtenerIdDisponibles(){
+        $colId=array();
+        $base=new BaseDatos();
+        if($base->iniciar()){
+            $consulta="SELECT idEmpresa FROM empresa ORDER BY idEmpresa";
+            if($base->ejecutar($consulta)){
+                while($registro=$base->registro()){
+                    $id=$registro['idEmpresa'];
+                    array_push($colId,$id);
+                }
+            }else{
+                $this->setMensaje($base->getError());
+            }
+        }else{
+            $this->setMensaje($base->getError());
+        }
+        return $colId;
+    }
 }

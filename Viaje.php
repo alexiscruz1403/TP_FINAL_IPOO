@@ -279,4 +279,27 @@ class Viaje {
         }
         return $colViajes;
     }
+
+    /**
+     * Retorna una coleccion con los idViaje registrados en la tabla viaje
+     * @return array
+     */
+    public function obtenerIdDisponibles(){
+        $colId=array();
+        $base=new BaseDatos();
+        if($base->iniciar()){
+            $consulta="SELECT idViaje FROM viaje ORDER BY idViaje";
+            if($base->ejecutar($consulta)){
+                while($registro=$base->registro()){
+                    $id=$registro['idViaje'];
+                    array_push($colId,$id);
+                }
+            }else{
+                $this->setMensaje($base->getError());
+            }
+        }else{
+            $this->setMensaje($base->getError());
+        }
+        return $colId;
+    }
 }

@@ -66,16 +66,16 @@ class Pasajero extends Persona{
      * Retorna true si la encuentra o false en caso contrario
      * @return boolean
      */
-    public function buscar($nroDocumento) {
+    public function buscar($idPasajero) {
         $base = new BaseDatos();
         $encontrado = false;
         
         if ($base->iniciar()) {
-            $consulta = "SELECT * FROM pasajero WHERE nroDocumento=" . $nroDocumento;
+            $consulta = "SELECT * FROM pasajero WHERE idPasajero=" . $idPasajero;
             
             if ($base->ejecutar($consulta)) {
                 if ($registro = $base->registro()) {
-                    parent::buscar($nroDocumento);
+                    parent::buscar($registro['nroDocumento']);
                     $this->setIdPasajero($registro['idPasajero']);
                     $this->setNroTicket($registro['nroTicket']);
                     $this->setNroAsiento($registro['nroAsiento']);
@@ -211,10 +211,27 @@ class Pasajero extends Persona{
         return $colPasajeros;
     }
 
-    
-    
-    
-    
-    
+    /**
+     * Retorna una coleccion con los idEmpresa registrados en la tabla empresa
+     * @return array
+     */
+    public function obtenerIdDisponibles(){
+        $colId=array();
+        $base=new BaseDatos();
+        if($base->iniciar()){
+            $consulta="SELECT idPasajero FROM pasajero ORDER BY idPasajero";
+            if($base->ejecutar($consulta)){
+                while($registro=$base->registro()){
+                    $id=$registro['idPasajero'];
+                    array_push($colId,$id);
+                }
+            }else{
+                $this->setMensaje($base->getError());
+            }
+        }else{
+            $this->setMensaje($base->getError());
+        }
+        return $colId;
+    }
     
 }

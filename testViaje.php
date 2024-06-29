@@ -134,10 +134,17 @@ class TestViaje
 
     public function buscarPasajero()
     {
-        echo "Ingrese el número de documento del pasajero a buscar: ";
+        $pasajero = new Pasajero();
+        $idDisponibles=$pasajero->obtenerIdDisponibles();
+        echo "ID disponibles:\n| ";
+        foreach($idDisponibles as $id){
+            echo $id." | ";
+        }
+        echo "\n";
+
+        echo "Ingrese el ID del pasajero a buscar: ";
         $id = trim(fgets(STDIN));
 
-        $pasajero = new Pasajero();
         echo "\n***********************************" . "\n";
         if ($pasajero->buscar($id)) {
             echo $pasajero;
@@ -149,12 +156,20 @@ class TestViaje
 
     public function modificarPasajero()
 {
-    echo "Ingrese el número de documento del pasajero a modificar: ";
-    $nroDoc = trim(fgets(STDIN));
+    $pasajero = new Pasajero();
+    $idDisponibles=$pasajero->obtenerIdDisponibles();
+    echo "ID disponibles:\n| ";
+    foreach($idDisponibles as $id){
+        echo $id." | ";
+    }
+    echo "\n";
+
+    echo "Ingrese el ID del pasajero a modificar: ";
+    $id = trim(fgets(STDIN));
 
     $pasajero = new Pasajero();
     echo "\n***********************************" . "\n";
-    if ($pasajero->buscar($nroDoc)) {
+    if ($pasajero->buscar($id)) {
         echo "Pasajero encontrado:\n" . $pasajero;
         echo "\n***********************************" . "\n";
         
@@ -187,11 +202,19 @@ class TestViaje
 
 public function eliminarPasajero()
 {
-    echo "Ingrese el número de documento del pasajero a eliminar: ";
-    $nroDoc = trim(fgets(STDIN));
+    $pasajero = new Pasajero();
+    $idDisponibles=$pasajero->obtenerIdDisponibles();
+    echo "ID disponibles:\n| ";
+    foreach($idDisponibles as $id){
+        echo $id." | ";
+    }
+    echo "\n";
+
+    echo "Ingrese el id del pasajero a eliminar: ";
+    $id = trim(fgets(STDIN));
 
     $pasajero = new Pasajero();
-    $encontrado = $pasajero->buscar($nroDoc);
+    $encontrado = $pasajero->buscar($id);
 
     if ($encontrado) {
         echo "\n*********** <<PASAJERO A ELIMINAR>> ***********" . "\n";
@@ -210,7 +233,7 @@ public function eliminarPasajero()
             echo "Eliminación cancelada.\n";
         }
     } else {
-        echo "El pasajero con número de documento $nroDoc no está registrado en ningún vuelo.\n";
+        echo "El pasajero con id $id no está registrado en ningún vuelo.\n";
     }
 
     echo "\n***********************************" . "\n";
@@ -317,10 +340,15 @@ public function listarPasajeros() {
 
     public function buscarEmpresa()
     {
+        $empresa = new Empresa();
+        $idDisponibles=$empresa->obtenerIdDisponibles();
+        echo "ID disponibles:\n| ";
+        foreach($idDisponibles as $id){
+            echo $id." | ";
+        }
+        echo "\n";
         echo "Ingrese el ID de la empresa a buscar: ";
         $id = trim(fgets(STDIN));
-
-        $empresa = new Empresa();
         echo "\n***********************************" . "\n";
         if ($empresa->buscar($id)) {
             echo $empresa;
@@ -332,10 +360,16 @@ public function listarPasajeros() {
 
     public function modificarEmpresa()
 {
+    $empresa = new Empresa();
+    $idDisponibles=$empresa->obtenerIdDisponibles();
+    echo "ID disponibles:\n| ";
+    foreach($idDisponibles as $id){
+        echo $id." | ";
+    }
+    echo "\n";
+
     echo "Ingrese el ID de la empresa a modificar: ";
     $id = trim(fgets(STDIN));
-
-    $empresa = new Empresa();
 
     // Buscar la empresa por ID
     if ($empresa->buscar($id)) {
@@ -373,10 +407,17 @@ public function listarPasajeros() {
 
     public function eliminarEmpresa()
     {
+        $empresa = new Empresa();
+        $idDisponibles=$empresa->obtenerIdDisponibles();
+        echo "ID disponibles:\n| ";
+        foreach($idDisponibles as $id){
+            echo $id." | ";
+        }
+        echo "\n";
+
         echo "Ingrese el ID de la empresa a eliminar: ";
         $id = trim(fgets(STDIN));
 
-        $empresa = new Empresa();
         echo "\n*********** <<EMPPRESA A ELIMINAR>> ***********" . "\n";
         if ($empresa->buscar($id)) {
             echo "Empresa encontrada:\n" . $empresa . "\n";
@@ -525,9 +566,16 @@ public function listarPasajeros() {
 
     public function buscarViaje()
     {
+        $unViaje = new Viaje();
+        $idDisponibles=$unViaje->obtenerIdDisponibles();
+        echo "ID disponibles:\n| ";
+        foreach($idDisponibles as $id){
+            echo $id." | ";
+        }
+        echo "\n";
+
         echo "Ingrese el ID del Viaje a buscar: ";
         $idViaje = trim(fgets(STDIN));
-        $unViaje = new Viaje();
         echo "\n***********************************" . "\n";
         if ($unViaje->buscar($idViaje)) {
             echo $unViaje;
@@ -539,9 +587,16 @@ public function listarPasajeros() {
 
     public function modificarViaje()
 {
+    $unViaje = new Viaje();
+    $idDisponibles=$unViaje->obtenerIdDisponibles();
+    echo "ID disponibles:\n| ";
+    foreach($idDisponibles as $id){
+        echo $id." | ";
+    }
+    echo "\n";
+
     echo "Ingrese el ID del Viaje a modificar: ";
     $idViaje = trim(fgets(STDIN));
-    $unViaje = new Viaje();
     echo "\n***********************************" . "\n";
     if ($unViaje->buscar($idViaje)) {
         echo "Viaje encontrado:\n" . $unViaje;
@@ -601,9 +656,16 @@ public function listarPasajeros() {
 
     public function eliminarViaje()
     {
+        $unViaje = new Viaje();
+        $idDisponibles=$unViaje->obtenerIdDisponibles();
+        echo "ID disponibles:\n| ";
+        foreach($idDisponibles as $id){
+            echo $id." | ";
+        }
+        echo "\n";
+
         echo "Ingrese el ID del Viaje a eliminar: ";
         $idViaje = trim(fgets(STDIN));
-        $unViaje = new Viaje();
         echo "\n*********** <<VIAJE A ELIMINAR>> ***********" . "\n";
         if ($unViaje->buscar($idViaje)) {
             echo "Viaje encontrado:\n" . $unViaje . "\n";
