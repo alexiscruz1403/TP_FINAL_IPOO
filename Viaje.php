@@ -2,7 +2,7 @@
 
 class Viaje {
     // Atributos
-    private $idViaje;
+    private $objViaje;
     private $destino;
     private $cantMaxPasajeros;
     private $importe; // Costo del viaje
@@ -14,7 +14,7 @@ class Viaje {
 
     // Constructor
     public function __construct() {
-        $this->idViaje = "";
+        $this->objViaje = "";
         $this->destino = "";
         $this->cantMaxPasajeros = "";
         $this->importe = "";
@@ -34,8 +34,8 @@ class Viaje {
     }
 
     // Observadores
-    public function getIdViaje() {
-        return $this->idViaje;
+    public function getObjViaje() {
+        return $this->objViaje;
     }
 
     public function getDestino() {
@@ -71,7 +71,7 @@ class Viaje {
     }
 
     public function __toString() {
-        return "IdViaje: " . $this->getIdViaje() . "\n" .
+        return "IDViaje: " . $this->getObjViaje() . "\n" .
                "Destino: " . $this->getDestino() . "\n" .
                "CantMaxPasajeros: " . $this->getCantMaxPasajeros() . "\n" .
                "Importe: " . $this->getImporte() . "\n" .
@@ -82,8 +82,8 @@ class Viaje {
     }
 
     // Modificadores
-    public function setIdViaje($unIdViaje) {
-        $this->idViaje = $unIdViaje;
+    public function setobjViaje($unobjViaje) {
+        $this->objViaje = $unobjViaje;
     }
 
     public function setDestino($unDestino) {
@@ -144,7 +144,7 @@ class Viaje {
                     $costosAbonados = $registro['costosAbonados'];
                     $colPasajeros = $unPasajero->listar("idViaje=".$idViaje);
                     $this->cargar($destino, $cantidadMaxima, $importe, $costosAbonados, $unaEmpresa, $unResponsable, $colPasajeros);
-                    $this->setIdViaje($idViaje);
+                    $this->setObjViaje($idViaje);
                     $encontrado = true;
                 }
             } else {
@@ -200,7 +200,7 @@ class Viaje {
         $base = new BaseDatos();
         $eliminado = false;
         if ($base->iniciar()) {
-            $consulta = "DELETE FROM viaje WHERE idViaje=" . $this->getIdViaje();
+            $consulta = "DELETE FROM viaje WHERE idViaje=" . $this->getObjViaje();
             if ($base->ejecutar($consulta)) {
                 $eliminado = true;
             } else {
@@ -227,7 +227,7 @@ class Viaje {
                         ", idEmpresa=" . $this->getEmpresa()->getIdEmpresa() .
                         ", numeroEmpleado=" . $this->getResponsable()->getNumeroEmpleado() .
                         ", costosAbonados=" . $this->getCostosAbonados() .
-                        " WHERE idViaje=" . $this->getIdViaje();
+                        " WHERE idViaje=" . $this->getObjViaje();
             if ($base->ejecutar($consulta)) {
                 $modificado = true;
             } else {
@@ -268,7 +268,7 @@ class Viaje {
                     $costosAbonados = $registro['costosAbonados'];
                     $colPasajeros = $unPasajero->listar("idViaje=".$registro['idViaje']);
                     $unViaje->cargar($destino,$cantidadMaxima,$importe,$costosAbonados,$unaEmpresa,$unResponsable,$colPasajeros);
-                    $unViaje->setIdViaje($registro['idViaje']);
+                    $unViaje->setobjViaje($registro['idViaje']);
                     array_push($colViajes, $unViaje);
                 }
             } else {

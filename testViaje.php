@@ -11,34 +11,6 @@ include_once 'Viaje.php';
 class TestViaje
 {
 
-    // public function mostrarMenuPrincipal()
-    // {
-    //     do {
-    //         echo "----------<< MENU PRINCIPAL >>------------\n";
-    //         echo "1. Menu Empresa\n";
-    //         echo "2. Menu Viaje\n";
-    //         echo "3. Salir\n";
-    //         echo "------------------------------------------\n";
-    //         echo "Seleccione una opción: ";
-    //         $opcion = trim(fgets(STDIN));
-
-    //         switch ($opcion) {
-    //             case 1:
-    //                 $this->mostrarMenuEmpresa();
-    //                 break;
-    //             case 2:
-    //                 $this->mostrarMenuViaje();
-    //                 break;
-    //             case 3:
-    //                 echo "Saliendo...\n";
-    //                 break;
-    //             default:
-    //                 echo "Opción no válida, intente nuevamente.\n";
-    //                 break;
-    //         }
-    //     } while ($opcion != 3);
-    // }
-
 
     public function mostrarMenuPrincipal()
     {
@@ -116,21 +88,14 @@ class TestViaje
         echo "\n***********************************" . "\n";
         echo "Ingrese el DNI del pasajero: ";
         $nroDoc = trim(fgets(STDIN));
-        echo "Ingrese el ID del viaje al que desea agregar al pasajero: ";
-        $idViaje = trim(fgets(STDIN));
     
         $pasajeroExistente = new Pasajero();
         $encontrado = $pasajeroExistente->buscar($nroDoc);
     
         if ($encontrado) {
-            // Verificar si el pasajero está asociado al mismo viaje
-            if ($pasajeroExistente->getViaje()->getIdViaje() == $idViaje) {
-                echo "El pasajero con DNI $nroDoc ya está registrado en el viaje a ".$pasajeroExistente->getViaje()->getDestino().".\n";
-            } else {
-                echo "El pasajero con DNI $nroDoc ya está asociado a otro vuelo.\n";
-            }
+            echo "El pasajero con DNI $nroDoc ya se encuentra registrado en el viaje.\n";
         } else {
-            // Pasajero no existe, proceder con la inserción como nuevo pasajero
+            // Si Pasajero no existe, isnerto el pasajero nuevo.
             echo "Ingrese el nombre del pasajero: ";
             $nombre = trim(fgets(STDIN));
             echo "Ingrese el apellido del pasajero: ";
@@ -139,6 +104,8 @@ class TestViaje
             $nroAsiento = trim(fgets(STDIN));
             echo "Ingrese el número de ticket: ";
             $nroTicket = trim(fgets(STDIN));
+            echo "Ingrese el ID del viaje al que desea agregar al pasajero: ";
+            $idViaje = trim(fgets(STDIN));
             echo "Ingrese el número de telefono: ";
             $telefono = trim(fgets(STDIN));
     
@@ -159,6 +126,7 @@ class TestViaje
     
         echo "\n***********************************" . "\n";
     }
+    
     
     
     
@@ -219,15 +187,13 @@ class TestViaje
 
 public function eliminarPasajero()
 {
-    echo "Ingrese el número de viaje del pasajero a eliminar: ";
-    $idViaje = trim(fgets(STDIN));
     echo "Ingrese el número de documento del pasajero a eliminar: ";
     $nroDoc = trim(fgets(STDIN));
 
     $pasajero = new Pasajero();
     $encontrado = $pasajero->buscar($nroDoc);
 
-    if ($encontrado && $pasajero->getViaje()->getIdViaje() == $idViaje) {
+    if ($encontrado) {
         echo "\n*********** <<PASAJERO A ELIMINAR>> ***********" . "\n";
         echo "Pasajero encontrado:\n" . $pasajero . "\n";
         echo "***********************************************" . "\n";
@@ -244,15 +210,12 @@ public function eliminarPasajero()
             echo "Eliminación cancelada.\n";
         }
     } else {
-        if (!$encontrado) {
-            echo "El pasajero con número de documento $nroDoc no está registrado en ningún vuelo.\n";
-        } else {
-            echo "El pasajero con número de documento $nroDoc no está registrado en el vuelo N° $idViaje" . " con destino a " . $pasajero->getViaje()->getDestino() . "\n" ;
-        }
+        echo "El pasajero con número de documento $nroDoc no está registrado en ningún vuelo.\n";
     }
 
     echo "\n***********************************" . "\n";
 }
+
 
 
 
@@ -368,32 +331,44 @@ public function listarPasajeros() {
     }
 
     public function modificarEmpresa()
-    {
-        echo "Ingrese el ID de la empresa a modificar: ";
-        $id = trim(fgets(STDIN));
+{
+    echo "Ingrese el ID de la empresa a modificar: ";
+    $id = trim(fgets(STDIN));
 
-        $empresa = new Empresa();
+    $empresa = new Empresa();
+
+    // Buscar la empresa por ID
+    if ($empresa->buscar($id)) {
+        echo "Empresa encontrada:\n" . $empresa;
         echo "\n***********************************" . "\n";
-        if ($empresa->buscar($id)) {
-            echo "Empresa encontrada:\n" . $empresa;
-            echo "\n***********************************" . "\n";
-            echo "Ingrese el nuevo nombre de la empresa: ";
-            $nombre = trim(fgets(STDIN));
-            echo "Ingrese la nueva dirección de la empresa: ";
-            $direccion = trim(fgets(STDIN));
+        
+        // Solicitar nuevos datos
+        echo "Ingrese el nuevo nombre de la empresa (deje en blanco para mantener el actual: ";
+        $nombre = trim(fgets(STDIN));
 
+        echo "Ingrese la nueva dirección de la empresa (deje en blanco para mantener la actual): ";
+        $direccion = trim(fgets(STDIN));
+
+        // Validar y actualizar solo si los datos no están vacíos
+        if (!empty($nombre)) {
             $empresa->setNombre($nombre);
-            $empresa->setDireccion($direccion);
-            if ($empresa->modificar()) {
-                echo "Empresa modificada correctamente.\n";
-            } else {
-                echo "Error al modificar la empresa: " . $empresa->getMensaje() . "\n";
-            }
-        } else {
-            echo "Empresa no encontrada." . "\n";
         }
-        echo "\n***********************************" . "\n";
+
+        if (!empty($direccion)) {
+            $empresa->setDireccion($direccion);
+        }
+
+        if ($empresa->modificar()) {
+            echo "Empresa modificada correctamente.\n";
+        } else {
+            echo "Error al modificar la empresa: " . $empresa->getMensaje() . "\n";
+        }
+    } else {
+        echo "Empresa no encontrada." . "\n";
     }
+    echo "\n***********************************" . "\n";
+}
+
 
 
     public function eliminarEmpresa()
