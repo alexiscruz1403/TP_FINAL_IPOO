@@ -26,16 +26,16 @@ CREATE TABLE responsable (
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 CREATE TABLE viaje (
-    idViaje bigint AUTO_INCREMENT, /*codigo de viaje*/
+    objViaje bigint AUTO_INCREMENT, /*codigo de viaje*/
 	destino varchar(150),
     cantMaxPasajeros int,
-	idEmpresa bigint,
-    numeroEmpleado bigint,
+	objEmpresa bigint,
+    objResponsable bigint,
     importe float,
     costosAbonados float,
     PRIMARY KEY (idViaje),
     FOREIGN KEY (idEmpresa) REFERENCES empresa (idEmpresa),
-	FOREIGN KEY (numeroEmpleado) REFERENCES responsable (numeroEmpleado)
+	FOREIGN KEY (objResponsable) REFERENCES responsable (objResponsable)
     ON UPDATE CASCADE
     ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT = 1;
